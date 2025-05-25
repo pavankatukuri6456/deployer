@@ -29,7 +29,7 @@ Deployer is a backend app with two microservices applier and builder, that lets 
 
 ## API
 
-### `POST /deploy`
+### `POST /build`
 
 **Request Body:**
 - `name` (string): Name of the application to deploy.
