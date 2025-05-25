@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: applier-deployment
+  namespace: deployer-ns
+  labels:
+    app: applier
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+        app: applier
+  template:
+    metadata:
+        labels:
+          app: applier
+    spec:
+        serviceAccountName: applier-sa
+        containers:
+            - image: 
+              name: applier
+        

@@ -1,6 +1,6 @@
 package model
 
-type DeployRequest struct {
+type BuildRequest struct {
 	RepoURL  string `json:"repo_url" binding:"required"`
 	Branch   string `json:"branch" binding:"required"`
 	AppName  string `json:"app_name" binding:"required"`

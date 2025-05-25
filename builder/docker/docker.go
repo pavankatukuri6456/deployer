@@ -21,7 +21,7 @@ func generateImageTag(app, env string) string {
 	return fmt.Sprintf("trialqju370.jfrog.io/pavankatukuri6456-docker/%s/%s/%d", app, env, randomID)
 }
 
-func TriggerPipeline(ctx context.Context, req model.DeployRequest) (string, string, error) {
+func TriggerPipeline(ctx context.Context, req model.BuildRequest) (string, string, error) {
 	ns := "deployer-ns"
 	imageTag := generateImageTag(req.AppName, req.Instance)
 
