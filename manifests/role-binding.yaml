@@ -1,0 +1,13 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: tekton-pipeline-access-binding
+  namespace: deployer-ns
+subjects:
+  - kind: ServiceAccount
+    name: tekton-bot
+    namespace: deployer-ns
+roleRef:
+  kind: Role
+  name: tekton-pipeline-access
+  apiGroup: rbac.authorization.k8s.io

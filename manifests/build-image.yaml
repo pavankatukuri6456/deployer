@@ -1,0 +1,76 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: build-image
+spec:
+  params:
+    - name: image-url
+  workspaces:
+    - name: source
+  steps:
+    - name: generate-dockerfile
+      image: alpine
+      script: |
+        #!/bin/sh
+        cd $(workspaces.source.path)
+
+        if [ -f Dockerfile ]; then
+          echo "Using existing Dockerfile"
+          exit 0
+        fi
+
+        echo "No Dockerfile found. Detecting language..."
+
+        if [ -f go.mod ]; then
+          echo "etected Go project"
+          echo "FROM golang:1.21 AS builder\nWORKDIR /app\nCOPY . .\nRUN go build -o app\n\nFROM alpine\nWORKDIR /app\nCOPY --from=builder /app/app .\nCOPY seeddata /app/data || true\nCMD [\"./app\"]" > Dockerfile
+
+        elif [ -f requirements.txt ] || ls *.py >/dev/null 2>&1; then
+          echo "Detected Python project"
+          echo "FROM python:3.10\nWORKDIR /app\nCOPY . .\nRUN pip install -r requirements.txt || true\nCOPY seeddata /app/data || true\nCMD [\"python\", \"main.py\"]" > Dockerfile
+
+        elif ls *.java >/dev/null 2>&1 || [ -f pom.xml ] || [ -f build.gradle ]; then
+          echo "Detected Java project"
+          echo "FROM maven:3.9-eclipse-temurin-17 AS builder\nWORKDIR /app\nCOPY . .\nRUN mvn package -DskipTests\n\nFROM eclipse-temurin:17-jre\nWORKDIR /app\nCOPY --from=builder /app/target/*.jar app.jar\nCOPY seeddata /app/data || true\nCMD [\"java\", \"-jar\", \"app.jar\"]" > Dockerfile
+
+        else
+          echo "Could not detect project language. Please add a Dockerfile."
+          exit 1
+
+    - name: debug-check-docker-config
+      image: alpine
+      volumeMounts:
+        - name: docker-config
+          mountPath: /root/.docker
+      command:
+        - /bin/sh
+      args:
+        - -c
+        - |
+          echo "Checking /root/.docker directory contents:"
+          ls -la /root/.docker
+          echo "Displaying config.json:"
+          cat /root/.docker/config.json || echo " config.json not found"
+          echo "Debug complete"
+
+    - name: build-and-push
+      image: quay.io/buildah/stable
+      securityContext:
+        privileged: true
+      volumeMounts:
+        - name: docker-config
+          mountPath: /root/.docker
+      script: |
+        cd $(workspaces.source.path)
+        echo "Building image $(params.image-url)"
+        buildah bud -t $(params.image-url) .
+        echo "Pushing image to JFrog Artifactory"
+        buildah push $(params.image-url)
+
+  volumes:
+    - name: docker-config
+      secret:
+        secretName: jfrog-docker-config
+        items:
+          - key: config.json
+            path: config.json

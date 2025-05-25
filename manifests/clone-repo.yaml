@@ -1,0 +1,21 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: clone-repo
+  namespace: deployer-ns
+spec:
+  params:
+    - name: repo-url
+      type: string
+    - name: revision
+      type: string
+      default: main
+  workspaces:
+    - name: output
+      description: The workspace where the repo will be cloned
+  steps:
+    - name: git-clone
+      image: alpine/git
+      script: |
+        echo "Cloning $(params.repo-url) at revision $(params.revision)"
+        git clone --branch $(params.revision) --single-branch $(params.repo-url) $(workspaces.output.path)

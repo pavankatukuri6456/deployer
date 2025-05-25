@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployer-deployment
+  namespace: deployer-ns
+  labels:
+    app: deployer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deployer
+  template:
+    metadata:
+      labels:
+        app: deployer
+    spec:
+     serviceAccountName: tekton-bot
+     containers:
+            - image: pavankatukuri6456/deployer:v15
+              name: deployer
+          
