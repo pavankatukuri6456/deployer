@@ -58,7 +58,7 @@ func TriggerPipeline(ctx context.Context, req model.DeployRequest) (string, stri
 					Name: "revision",
 					Value: tektonv1.ParamValue{
 						Type:      tektonv1.ParamTypeString,
-						StringVal: req.Branch, // <--- You must include this in your DeployRequest model
+						StringVal: req.Branch,
 					},
 				},
 				{
