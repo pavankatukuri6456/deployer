@@ -1,6 +1,6 @@
 # Deployer
 
-Deployer is a backend app that lets developers deploy their applications without worrying about Dockerfiles or deployment manifests. With a single API call, Deployer builds your code and pushes the resulting image to jFrog Artifactory, streamlining the deployment process for any project.
+Deployer is a backend app with two microservices applier and builder, that lets developers deploy their applications without worrying about Dockerfiles or deployment manifests. With a single API call, Deployer builds your code and pushes the resulting image to jFrog Artifactory, streamlining the deployment process for any project.
 
 ## Features
 
@@ -12,7 +12,7 @@ Deployer is a backend app that lets developers deploy their applications without
 
 ## How It Works
 
-1. Send a POST request to `/deploy` with the following JSON body:
+1. Send a POST request to `/build` with the following JSON body:
    ```json
    {
      "name": "myapp",
@@ -21,9 +21,11 @@ Deployer is a backend app that lets developers deploy their applications without
      "instance": "dev"
    }
    ```
-2. Deployer clones the repository and checks for a Dockerfile.
+2. Builder clones the repository and checks for a Dockerfile.
 3. If a Dockerfile is found, it builds and pushes the image.
-4. If not, Deployer identifies the main language and runs the appropriate Tekton pipeline before pushing the image.
+4. If not, Builder identifies the main language and runs the appropriate Tekton pipeline before pushing the image.
+5. Now, if the image is built and pushed successfully, Applier ms comes into place.
+6. It takes namespace name, appname, image tage and deploys the application with deployment, service and route/ingress.
 
 ## API
 
