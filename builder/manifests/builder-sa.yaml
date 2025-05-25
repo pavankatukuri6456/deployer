@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: tekton-bot
+  name: builder-sa
   namespace: deployer-ns
 imagePullSecrets:
   - name: regcred

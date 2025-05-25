@@ -44,7 +44,7 @@ func TriggerPipeline(ctx context.Context, req model.BuildRequest) (string, strin
 				Name: "build-pipeline",
 			},
 			TaskRunTemplate: tektonv1.PipelineTaskRunTemplate{
-				ServiceAccountName: "tekton-bot",
+				ServiceAccountName: "builder-sa",
 			},
 			Params: []tektonv1.Param{
 				{

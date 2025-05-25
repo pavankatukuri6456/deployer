@@ -5,7 +5,7 @@ metadata:
   namespace: deployer-ns
 subjects:
   - kind: ServiceAccount
-    name: tekton-bot
+    name: builder-sa
     namespace: deployer-ns
 roleRef:
   kind: Role

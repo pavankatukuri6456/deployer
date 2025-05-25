@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"deployer/docker"
+	"deployer/builder/docker"
 	"deployer/model"
 	"net/http"
 
@@ -23,8 +23,8 @@ func main() {
 
 	r := gin.Default()
 
-	r.POST("/deploy", func(c *gin.Context) {
-		var req model.DeployRequest
+	r.POST("/build", func(c *gin.Context) {
+		var req model.BuildRequest
 		if err := c.ShouldBindJSON(&req); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
@@ -44,7 +44,7 @@ func main() {
 		})
 	})
 
-	r.GET("/deploy", Getstatus)
+	r.GET("/status", Getstatus)
 
 	r.Run(":8080")
 

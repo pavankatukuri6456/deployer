@@ -1,7 +1,7 @@
 package model
 
 type AppRequest struct {
-	AppName   string `json:"appName"`
-	Namespace string `json:"namespace"`
-	Image     string `json:"image"`
+	AppName   string `json:"appName" binding:"required"`
+	Namespace string `json:"namespace" binding:"required"`
+	Image     string `json:"image" binding:"required"`
 }
