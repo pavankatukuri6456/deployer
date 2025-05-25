@@ -29,7 +29,7 @@ Deployer is a backend app with two microservices applier and builder, that lets 
 
 ## API
 
-### `POST /build`
+### `POST /build` on builder service
 
 **Request Body:**
 - `name` (string): Name of the application to deploy.
@@ -44,6 +44,18 @@ Deployer is a backend app with two microservices applier and builder, that lets 
   "repo_url": "https://github.com/user/myapp",
   "branch": "main",
   "instance": "production"
+}
+```
+
+
+### `POST /deploy` on applier service
+
+**Example:**
+```json
+{
+  "appName": "my-go-app",
+  "namespace": "dev-environment",
+  "image": "jfrog.io/pavankatukuri6456/my-go-app/dev/12345"
 }
 ```
 
