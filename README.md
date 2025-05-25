@@ -82,6 +82,8 @@ Part 2 (In development)
 - It then ensures if given namespace exists, if not creates.
 - It copies the jFrog artifactory secret from 'default' (to be applied manually before the 1st launch of application) to the user given namespace.
 - Creates deployment with imagepullSecret attached, service of type ClusterIP and basic ingress (this can be later changed to route for openshift).
+- It does all this using the service account given in applier/manifests/applier-sa.yaml. A role and role binding also declared there. 
+
 
 Phase 2 of part 2 (In development)
 - Monitor deployment until scaled as expected.
