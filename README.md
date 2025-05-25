@@ -57,6 +57,25 @@ Deployer is a backend app that lets developers deploy their applications without
 
 > _Instructions for installing/running locally, if applicable. (Please fill in as needed!)_
 
+- This application needs to be running on any k8s cluster.
+- A role is specified in manifests/role.yaml with required permissions to start the pipelines and binded it with service account in manifests/tekton-sa.yaml in role-binding.yaml.
+- The tekton task build-image needs jFrog secret to be mounted as volume. So jFrog secret is created as k8s secret using --from-file=config.json.
+- This go application image is in dockerHub so dockerHub creds are added as imagePullSecret named regcred to the same service account and attached in deployment.yaml
+- Dockerhub secret regcred attached to serviceAccount is for the deployment to pull the deployer application image from dockerHub and jFrog secret is created and mounted to tekton task to build the user 
+  application images to jFrog artifactory.
+
+  This is initial working pack of part 1 of the entire deployer app.
+
+Phase 2 of part 1 (In development)
+- The requests are tracked in DB, so that if user updates the code, if the same req body is triggered, image tag will be updated accordingly.
+- GET request endpoints to track the entire status of the workflow.
+
+Part 2 (In development)
+
+- A dedicated go microservice will be places in all the k8s cluster could be EKS, Openshift etc. 
+- This microservice will be responsible for creating the manifests like deployments, imagepullsecrets, services, routes etc., for the app.
+- This microservice will poll the API server (built in phase 1) for any newly created/ updated image requests.
+
 ## Contributing
 
 Contributions are welcome! Please open issues or submit pull requests for improvements and bug fixes.
